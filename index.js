@@ -46,8 +46,14 @@ async function run() {
             res.send(users)
         })
 
-
-
+        app.get('/:email/users', async (req, res) => {
+            const email = req.params.email
+            const query = { email: email }
+            const cursor = usersCollection.find(query);
+            const users = await cursor.toArray()
+            console.log(users);
+            res.json(users)
+        })
 
 
         // POST API
@@ -66,15 +72,26 @@ async function run() {
         })
 
 
-
-
         // UPDATE API
+        app.put('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedData = req.body
+            const query = { _id: ObjectId(id) }
 
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: updatedData.status
+                },
+            };
 
+            const result = await usersCollection.updateOne(query, updateDoc, options)
+            console.log('updating user with id', result);
+            res.json(result)
+        })
 
 
         // DELETE API
-
         app.delete('/users/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -88,8 +105,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
-
 
 
 app.get('/', (req, res) => {
