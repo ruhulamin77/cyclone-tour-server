@@ -1,8 +1,8 @@
-const express = require("express");
-require("dotenv").config();
-const cors = require("cors");
-const ObjectId = require("mongodb").ObjectId;
-const { MongoClient } = require("mongodb");
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
+const ObjectId = require('mongodb').ObjectId;
+const { MongoClient } = require('mongodb');
 const app = express();
 
 const port = process.env.PORT || 5000;
@@ -20,14 +20,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const database = client.db("cycloneTour");
-    const toursCollection = database.collection("tours");
-    const usersCollection = database.collection("users");
+    const database = client.db('cycloneTour');
+    const toursCollection = database.collection('tours');
+    const usersCollection = database.collection('users');
 
     // create a document to insert
 
     // GET Single Tour
-    app.get("/tours/:id", async (req, res) => {
+    app.get('/tours/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const tour = await toursCollection.findOne(query);
@@ -35,19 +35,19 @@ async function run() {
     });
 
     // GET API
-    app.get("/tours", async (req, res) => {
+    app.get('/tours', async (req, res) => {
       const cursor = toursCollection.find({});
       const tours = await cursor.toArray();
       res.send(tours);
     });
 
-    app.get("/users", async (req, res) => {
+    app.get('/users', async (req, res) => {
       const cursor = usersCollection.find({});
       const users = await cursor.toArray();
       res.send(users);
     });
 
-    app.get("/users/:email", async (req, res) => {
+    app.get('/users/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
       const cursor = usersCollection.find(query);
@@ -57,22 +57,20 @@ async function run() {
     });
 
     // POST API
-    app.post("/tours", async (req, res) => {
+    app.post('/tours', async (req, res) => {
       const tour = req.body;
-      console.log("hitting api", tour);
       const result = await toursCollection.insertOne(tour);
       res.json(result);
     });
 
-    app.post("/users", async (req, res) => {
+    app.post('/users', async (req, res) => {
       const user = req.body;
-      console.log("hitting api", user);
       const result = await usersCollection.insertOne(user);
       res.json(result);
     });
 
     // UPDATE API
-    app.put("/users/:id", async (req, res) => {
+    app.put('/users/:id', async (req, res) => {
       const id = req.params.id;
       const updatedData = req.body;
       const query = { _id: ObjectId(id) };
@@ -85,16 +83,16 @@ async function run() {
       };
 
       const result = await usersCollection.updateOne(query, updateDoc, options);
-      console.log("updating user with id", result);
+      console.log('updating user with id', result);
       res.json(result);
     });
 
     // DELETE API
-    app.delete("/users/:id", async (req, res) => {
+    app.delete('/users/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
-      console.log("deleting user with id", result);
+      console.log('deleting user with id', result);
       res.json(result);
     });
   } finally {
@@ -103,8 +101,8 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get('/', (req, res) => {
+  res.send('<h1>Hello, Tourist. Welcome to Cyclone-Tour!</h1>');
 });
 
 app.listen(port, () => {
