@@ -20,7 +20,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const database = client.db('cycloneTour');
+    const database = client.db('carWorld');
     const toursCollection = database.collection('tours');
     const usersCollection = database.collection('users');
 
@@ -102,7 +102,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello, Tourist. Welcome to Cyclone-Tour!</h1>');
+  res.send('<h1>Hello, Tourist. Welcome to Cyclone-Tour!!</h1>');
 });
 
 app.listen(port, () => {
